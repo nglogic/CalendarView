@@ -175,7 +175,7 @@ public class CalendarLayout extends LinearLayout {
         setOrientation(LinearLayout.VERTICAL);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CalendarLayout);
         mContentViewId = array.getResourceId(R.styleable.CalendarLayout_calendar_content_view_id, 0);
-        mContentMode = array.getResourceId(R.styleable.CalendarLayout_content_mode, CONTENT_MODE_IMMOBILE);
+        mContentMode = array.getResourceId(R.styleable.CalendarLayout_content_mode, CONTENT_MODE_DYNAMIC);
         mDefaultStatus = array.getInt(R.styleable.CalendarLayout_default_status, STATUS_EXPAND);
         mCalendarShowMode = array.getInt(R.styleable.CalendarLayout_calendar_show_mode, CALENDAR_SHOW_MODE_BOTH_MONTH_WEEK_VIEW);
         mGestureMode = array.getInt(R.styleable.CalendarLayout_gesture_mode, GESTURE_MODE_DEFAULT);
@@ -608,10 +608,9 @@ public class CalendarLayout extends LinearLayout {
             h = height - weekBarHeight - mItemHeight;
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int heightSpec = MeasureSpec.makeMeasureSpec(h,
-                MeasureSpec.EXACTLY);
+        int heightSpec = MeasureSpec.makeMeasureSpec(h, MeasureSpec.EXACTLY);
         mContentView.measure(widthMeasureSpec, heightSpec);
-        mContentView.layout(mContentView.getLeft(), mContentView.getTop(), mContentView.getRight(), mContentView.getBottom());
+         mContentView.layout(mContentView.getLeft(), mContentView.getTop(), mContentView.getRight(), mContentView.getBottom());
     }
 
     @Override
@@ -620,7 +619,11 @@ public class CalendarLayout extends LinearLayout {
         mMonthView = findViewById(R.id.vp_month);
         mWeekPager = findViewById(R.id.vp_week);
         if (getChildCount() > 0) {
-            mCalendarView = (CalendarView) getChildAt(0);
+            for (int i = 0; i < getChildCount(); i++) {
+                if (getChildAt(i) instanceof CalendarView) {
+                    mCalendarView = (CalendarView) getChildAt(i);
+                }
+            }
         }
         mContentView = findViewById(mContentViewId);
         mYearView = findViewById(R.id.selectLayout);
